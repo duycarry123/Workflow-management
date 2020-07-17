@@ -21,6 +21,7 @@ class App extends Component {
         this.onCloseTarkForm = this.onCloseTarkForm.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onUpdateStatus = this.onUpdateStatus.bind(this);
+        this.onDelete = this.onDelete.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -110,6 +111,21 @@ class App extends Component {
     //     return result;
     // }
 
+    // Hàm xóa item TarkItem -> TarkList -> App
+    onDelete(id) {
+        const { tarks } = this.state;
+        const index = tarks.findIndex((tark) => {
+            return tark.id === id
+        })
+        // Bắt đầu từ vị trí index, xóa 1 phần tử
+        // Có thể dùng filter,map,clice để mutate
+        tarks.splice(index, 1);
+        this.setState({
+            tarks: tarks
+        })
+        localStorage.setItem('tarks', JSON.stringify(tarks));
+    }
+
     render() {  
         // State
         const { tarks, isDisplayForm } = this.state;
@@ -161,7 +177,11 @@ class App extends Component {
                             {/* Search and Sort */}                  
                             <Control></Control>
                             {/* Tark List */}
-                            <TarkList tarks={tarks} onUpdateStatus={this.onUpdateStatus}></TarkList>
+                            <TarkList
+                                tarks={tarks}
+                                onUpdateStatus={this.onUpdateStatus}
+                                onDelete={this.onDelete}
+                            ></TarkList>
                         </div>
                     </div>
                 </div>

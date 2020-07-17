@@ -5,10 +5,15 @@ class TarkItem extends Component {
     constructor(props) {
         super(props);
         this.onChangeStatus = this.onChangeStatus.bind(this);
+        this.onDeleteItem = this.onDeleteItem.bind(this);
     }
 
     onChangeStatus() {
         this.props.onUpdateStatus(this.props.tark.id);
+    }
+
+    onDeleteItem() {
+        this.props.onDelete(this.props.tark.id);
     }
 
     render() {        
@@ -34,7 +39,10 @@ class TarkItem extends Component {
                         <i className="fas fa-pen-square mr-1"></i>
                         Sữa
                     </button>
-                    <button className="btn btn-secondary">
+                    <button
+                        className="btn btn-secondary"
+                        onClick={this.onDeleteItem}
+                    >
                         <i className="fas fa-trash-alt mr-1"></i>
                         Xóa
                     </button>
