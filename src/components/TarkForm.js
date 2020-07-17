@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
 
 class TarkForm extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.onCloseForm = this.onCloseForm.bind(this);
+    }
+
+    onCloseForm() {
+        this.props.onCloseTarkForm();
+    }
+
     render() {
         return (
             <div className="App">
                 <div className="tarkform">
                     <h3 className="tarkform-heading">
                         Thêm Công việc
-                        <i class="fas fa-times-circle heading-i"></i>
+                        <i
+                            className="fas fa-times-circle heading-i"
+                            onClick={this.onCloseForm}
+                        >
+                        </i>
                     </h3>
                     <form className="tarkform-body">
                         <label className="tarkform-label">Tên: </label>

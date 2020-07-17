@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import randomstring from 'randomstring'
+import classnames from "classnames"
 
 import TarkForm from './components/TarkForm'
 import Control from './components/Control'
@@ -12,11 +13,12 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tarks: [
-               
-            ]
+            tarks: [],
+            isDisplayForm: true
         }
         this.onGenerageData = this.onGenerageData.bind(this);
+        this.onToggleTarkForm = this.onToggleTarkForm.bind(this);
+        this.onCloseTarkForm = this.onCloseTarkForm.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -56,8 +58,31 @@ class App extends Component {
         ]
         localStorage.setItem('tarks', JSON.stringify(tarks));
     }
+    
+    onToggleTarkForm() {
+        this.setState({
+            isDisplayForm: !this.state.isDisplayForm
+        })
+    }
+
+    onCloseTarkForm() {
+        this.setState({
+            isDisplayForm: false
+        })
+    }
+
     render() {  
-        const { tarks } = this.state;
+        const { tarks, isDisplayForm } = this.state;
+
+        const elmTarkForm = isDisplayForm ? <TarkForm onCloseTarkForm={this.onCloseTarkForm}></TarkForm> : '';
+        const tarkListClassname = classnames({
+            'col-xs-8 col-sm-8 col-md-8 col-lg-8': isDisplayForm,
+            'col-xs-12 col-sm-12 col-md-12 col-lg-12': isDisplayForm === false
+        })
+        const tarkFormClassname = classnames({
+            'col-xs-4 col-sm-4 col-md-4 col-lg-4': isDisplayForm,
+            '': isDisplayForm === false
+        })
         return (            
             <div className="App">
                 <div className="container">
@@ -65,11 +90,14 @@ class App extends Component {
                         Word Management
                     </h1>
                     <div className="row app-body">
-                        <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4 ">
-                            <TarkForm></TarkForm>
+                        <div className={tarkFormClassname}>
+                            {elmTarkForm}
                         </div>
-                        <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                            <button className="btn btn-primary ">
+                        <div className={tarkListClassname}>
+                            <button
+                                className="btn btn-primary"
+                                onClick={this.onToggleTarkForm}
+                            >
                                 <i className="fas fa-plus mr-1"></i>
                                 Thêm Công Việc
                             </button>
