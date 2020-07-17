@@ -8,10 +8,13 @@ class Search extends Component {
                     <input
                         type="text"
                         className="form-control"
-                        placeholder="Nhập đẻ tìm kiếm..."
+                        placeholder="Nhập để tìm kiếm..."
                     />
                     <div className="input-group-append">
-                        <button className="btn btn-primary" type="button" id="button-addon2">Button</button>
+                        <button className="btn btn-primary" type="button" id="button-addon2">
+                            <i className="fas fa-search mr-1"></i>
+                            Tìm Kiếm
+                        </button>
                     </div>
                 </div>
             </div>                        

@@ -7,7 +7,8 @@ class TarkForm extends Component {
                 <div className="tarkform">
                     <h3 className="tarkform-heading">
                         Thêm Công việc
-                                </h3>
+                        <i class="fas fa-times-circle heading-i"></i>
+                    </h3>
                     <form className="tarkform-body">
                         <label className="tarkform-label">Tên: </label>
                         <br />

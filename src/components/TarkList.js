@@ -2,7 +2,14 @@ import React, { Component } from 'react';
 import TarkItem from './TarkItem'
 
 class TarkList extends Component {
+
     render() {
+        var elmTarks = [];
+        if (this.props.tarks) {     
+            elmTarks = this.props.tarks.map((tark, index) => {
+                return <TarkItem key={tark.id} index={index} tark={tark}></TarkItem>
+            })
+        }
         return (            
             <table className="table table-bordered">
                 <thead>
@@ -34,9 +41,7 @@ class TarkList extends Component {
                         </td>
                         <td></td>
                     </tr>
-                    <TarkItem></TarkItem>
-                    <TarkItem></TarkItem>
-                    <TarkItem></TarkItem>
+                    {elmTarks}
                 </tbody>
             </table>                        
         );
