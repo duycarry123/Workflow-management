@@ -14,12 +14,13 @@ class App extends Component {
         super(props);
         this.state = {
             tarks: [],
-            isDisplayForm: true
+            isDisplayForm: false
         }
         this.onGenerageData = this.onGenerageData.bind(this);
         this.onToggleTarkForm = this.onToggleTarkForm.bind(this);
         this.onCloseTarkForm = this.onCloseTarkForm.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onUpdateStatus = this.onUpdateStatus.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -83,12 +84,46 @@ class App extends Component {
         })
         localStorage.setItem('tarks', JSON.stringify(tarks));
     }
+
+    // Hàm nhận id tử  TarkItem -> TarkList -> App 
+    onUpdateStatus(id) {
+        const { tarks } = this.state;
+        // const index = this.findIndex(id);
+        const index = tarks.findIndex((tark) => {
+            return tark.id === id;
+        })
+        // console.log(index)
+        tarks[index].status = !tarks[index].status;
+        this.setState({
+            tarks: tarks
+        })
+        localStorage.setItem('tarks', JSON.stringify(tarks));
+    }
+    // findIndex = (id) => {
+    //     const { tarks } = this.state;
+    //     var result;
+    //     tarks.forEach((tark ,index) => {
+    //         if (tark.id === id) {
+    //             result = index;
+    //         }
+    //     })
+    //     return result;
+    // }
+
     render() {  
+        // State
         const { tarks, isDisplayForm } = this.state;
 
+        // TarkForm
         const elmTarkForm = isDisplayForm
-            ? <TarkForm onCloseTarkForm={this.onCloseTarkForm} onSubmit={this.onSubmit}></TarkForm>
+            ? <TarkForm
+                onCloseTarkForm={this.onCloseTarkForm}
+                onSubmit={this.onSubmit}
+                
+            ></TarkForm>
             : '';
+        
+        // Class 
         const tarkListClassname = classnames({
             'col-xs-8 col-sm-8 col-md-8 col-lg-8': isDisplayForm,
             'col-xs-12 col-sm-12 col-md-12 col-lg-12': isDisplayForm === false
@@ -97,6 +132,7 @@ class App extends Component {
             'col-xs-4 col-sm-4 col-md-4 col-lg-4': isDisplayForm,
             '': isDisplayForm === false
         })
+
         return (            
             <div className="App">
                 <div className="container">
@@ -125,7 +161,7 @@ class App extends Component {
                             {/* Search and Sort */}                  
                             <Control></Control>
                             {/* Tark List */}
-                            <TarkList tarks={tarks}></TarkList>
+                            <TarkList tarks={tarks} onUpdateStatus={this.onUpdateStatus}></TarkList>
                         </div>
                     </div>
                 </div>

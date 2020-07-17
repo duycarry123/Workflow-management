@@ -2,18 +2,30 @@ import React, { Component } from 'react';
 import classnames from 'classnames'
 
 class TarkItem extends Component {
-    render() {
+    constructor(props) {
+        super(props);
+        this.onChangeStatus = this.onChangeStatus.bind(this);
+    }
+
+    onChangeStatus() {
+        this.props.onUpdateStatus(this.props.tark.id);
+    }
+
+    render() {        
         const { tark, index } = this.props
         const className = classnames({
-            'badge badge-pill badge-warning fw-5': tark.status === false,
-            'badge badge-pill badge-primary fw-5': tark.status === true
+            'badge badge-pill badge-warning fw-5 tark-status': tark.status === false,
+            'badge badge-pill badge-primary fw-5 tark-status': tark.status === true
         })
         return (
             <tr>
                 <td className="text-center">{index + 1}</td>
                 <td>{tark.name}</td>
                 <td className="text-center">                    
-                    <span className={className}>{
+                    <span
+                        className={className}
+                        onClick={this.onChangeStatus}
+                    >{
                         tark.status ? "Kích Hoạt" : "Ẩn"
                     }</span>
                 </td>

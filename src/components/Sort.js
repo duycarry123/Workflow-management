@@ -26,7 +26,7 @@ class Sort extends Component {
                             </button>
                         </li>
                         <li>
-                            <button>Trạng thái kích hoạt</button>
+                            <button>Trạng Thái Kích Hoạt</button>
                         </li>
                         <li>
                             <button>Ẩn</button>

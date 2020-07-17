@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import TarkItem from './TarkItem'
 
 class TarkList extends Component {
-
+   
     render() {
         var elmTarks = [];
         if (this.props.tarks) {     
             elmTarks = this.props.tarks.map((tark, index) => {
-                return <TarkItem key={tark.id} index={index} tark={tark}></TarkItem>
+                return <TarkItem
+                    key={tark.id}
+                    index={index}
+                    tark={tark}
+                    onUpdateStatus={this.props.onUpdateStatus}
+                ></TarkItem>
             })
         }
         return (            
