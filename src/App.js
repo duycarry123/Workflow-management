@@ -19,6 +19,7 @@ class App extends Component {
         this.onGenerageData = this.onGenerageData.bind(this);
         this.onToggleTarkForm = this.onToggleTarkForm.bind(this);
         this.onCloseTarkForm = this.onCloseTarkForm.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -59,22 +60,35 @@ class App extends Component {
         localStorage.setItem('tarks', JSON.stringify(tarks));
     }
     
+    // Đóng mở Tarkform
     onToggleTarkForm() {
         this.setState({
             isDisplayForm: !this.state.isDisplayForm
         })
     }
-
+    // Đóng Tarkform
     onCloseTarkForm() {
         this.setState({
             isDisplayForm: false
         })
     }
 
+    // Hàm nhận dữ liệu từ Tarkform
+    onSubmit(data) {
+        data.id = randomstring.generate();
+        const { tarks } = this.state;                
+        tarks.push(data);
+        this.setState({
+            tarks: tarks
+        })
+        localStorage.setItem('tarks', JSON.stringify(tarks));
+    }
     render() {  
         const { tarks, isDisplayForm } = this.state;
 
-        const elmTarkForm = isDisplayForm ? <TarkForm onCloseTarkForm={this.onCloseTarkForm}></TarkForm> : '';
+        const elmTarkForm = isDisplayForm
+            ? <TarkForm onCloseTarkForm={this.onCloseTarkForm} onSubmit={this.onSubmit}></TarkForm>
+            : '';
         const tarkListClassname = classnames({
             'col-xs-8 col-sm-8 col-md-8 col-lg-8': isDisplayForm,
             'col-xs-12 col-sm-12 col-md-12 col-lg-12': isDisplayForm === false
