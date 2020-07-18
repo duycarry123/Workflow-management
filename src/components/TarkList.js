@@ -13,6 +13,7 @@ class TarkList extends Component {
                     tark={tark}
                     onUpdateStatus={this.props.onUpdateStatus}
                     onDelete={this.props.onDelete}
+                    onUpdate={this.props.onUpdate}
                 ></TarkItem>
             })
         }

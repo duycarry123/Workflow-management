@@ -6,6 +6,7 @@ class TarkForm extends Component {
         super(props);
 
         this.state = {
+            id: '',
             name: '',
             status: false
         }
@@ -16,6 +17,37 @@ class TarkForm extends Component {
         this.onClearForm = this.onClearForm.bind(this);
     }
 
+    componentDidMount() {
+        if (this.props.tark) {    
+            const { id, name, status } = this.props.tark;
+            this.setState({
+                id: id,
+                name: name,
+                status: status
+            })
+          
+        }
+    }
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.tark) {
+            const { id, name, status } = nextProps.tark;
+            this.setState({
+                id: id,
+                name: name,
+                status: status
+            })
+        } else {
+            // Edit -> Add
+            // tarkEditing === null
+            if (nextProps.tark === null) {
+                this.setState({
+                    id: '',
+                    name: '',
+                    status: false
+                })
+            }
+        }
+    }
 
     onCloseForm() {
         this.props.onCloseTarkForm();
@@ -41,8 +73,7 @@ class TarkForm extends Component {
         } else {            
             this.onCloseForm();
             this.props.onSubmit(tark);
-        }
-       
+        }       
     }
 
     onClearForm() {
@@ -52,12 +83,12 @@ class TarkForm extends Component {
         })
     }
 
-    render() {
+    render() {       
         return (
             <div className="App">
                 <div className="tarkform">
                     <h3 className="tarkform-heading">
-                        Thêm Công việc
+                        {this.state.id ? 'Cập Nhật Công Việc' : "Thêm Công việc"}
                         <i
                             className="fas fa-times-circle heading-i"
                             onClick={this.onCloseForm}

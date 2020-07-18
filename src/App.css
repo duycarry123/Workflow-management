@@ -18,6 +18,9 @@ thead tr th{
 .container{
   margin-top:18px;
 }
+.container h1{
+  color:#3a3e42;
+}
 .heading{
   padding-bottom: 30px;
   border-bottom: 1px solid #d6d4d4;

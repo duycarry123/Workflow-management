@@ -14,14 +14,17 @@ class App extends Component {
         super(props);
         this.state = {
             tarks: [],
-            isDisplayForm: false
+            isDisplayForm: false,
+            tarkEditing: null
         }
-        this.onGenerageData = this.onGenerageData.bind(this);
+        // this.onGenerageData = this.onGenerageData.bind(this);
         this.onToggleTarkForm = this.onToggleTarkForm.bind(this);
         this.onCloseTarkForm = this.onCloseTarkForm.bind(this);
+        this.onShowTarkForm = this.onShowTarkForm.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onUpdateStatus = this.onUpdateStatus.bind(this);
         this.onDelete = this.onDelete.bind(this);
+        this.onUpdate = this.onUpdate.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -35,38 +38,46 @@ class App extends Component {
     }
 
     // Đưa dữ liệu lên localStorage
-    onGenerageData() {
-        const tarks = [
-            {
-                id: randomstring.generate(),
-                name: 'Wake Me Up',
-                status: true
-            },
-            {
-                id: randomstring.generate(),
-                name: 'I Could Be The One',
-                status: false
-            },
-            {
-                id: randomstring.generate(),
-                name: 'I Wanna Be Free',
-                status: true
-            },
-            {
-                id: randomstring.generate(),
-                name: 'What Would I Change It To',
-                status: false
-            }
+    // onGenerageData() {
+    //     const tarks = [
+    //         {
+    //             id: randomstring.generate(),
+    //             name: 'Wake Me Up',
+    //             status: true
+    //         },
+    //         {
+    //             id: randomstring.generate(),
+    //             name: 'I Could Be The One',
+    //             status: false
+    //         },
+    //         {
+    //             id: randomstring.generate(),
+    //             name: 'I Wanna Be Free',
+    //             status: true
+    //         },
+    //         {
+    //             id: randomstring.generate(),
+    //             name: 'What Would I Change It To',
+    //             status: false
+    //         }
             
-        ]
-        localStorage.setItem('tarks', JSON.stringify(tarks));
-    }
+    //     ]
+    //     localStorage.setItem('tarks', JSON.stringify(tarks));
+    // }
     
     // Đóng mở Tarkform
     onToggleTarkForm() {
-        this.setState({
-            isDisplayForm: !this.state.isDisplayForm
-        })
+        if (this.state.tarkEditing) {
+            this.setState({      
+                isDisplayForm: true,
+                tarkEditing: null
+            })
+        } else {
+            this.setState({
+                isDisplayForm: !this.state.isDisplayForm,
+                tarkEditing: null
+            })
+        }
     }
     // Đóng Tarkform
     onCloseTarkForm() {
@@ -74,12 +85,26 @@ class App extends Component {
             isDisplayForm: false
         })
     }
+    // Mở Tarkform
+    onShowTarkForm() {
+        this.setState({
+            isDisplayForm: true
+        })
+    }
 
     // Hàm nhận dữ liệu từ Tarkform
     onSubmit(data) {
-        data.id = randomstring.generate();
-        const { tarks } = this.state;                
-        tarks.push(data);
+        const { tarks } = this.state;    
+        if (data.id === '') {      
+            console.log(data)
+            data.id = randomstring.generate();
+            tarks.push(data);
+        } else {
+            const index = tarks.findIndex((tark) => {
+                return tark.id === data.id;
+            })
+            tarks[index] = data;           
+        }        
         this.setState({
             tarks: tarks
         })
@@ -126,16 +151,28 @@ class App extends Component {
         localStorage.setItem('tarks', JSON.stringify(tarks));
     }
 
+    // Hàm sữa item TarkItem -> TarkList -> App (id) -> TarkForm (id open TarkForm)
+    onUpdate(id) {
+        const { tarks } = this.state;
+        const index = tarks.findIndex((tark) => {
+            return tark.id === id
+        })
+        const tarkEditing = tarks[index];       
+        this.setState({
+            tarkEditing: tarkEditing,       
+        })       
+        this.onShowTarkForm();
+    }
+
     render() {  
         // State
-        const { tarks, isDisplayForm } = this.state;
-
+        const { tarks, isDisplayForm , tarkEditing} = this.state;
         // TarkForm
         const elmTarkForm = isDisplayForm
             ? <TarkForm
                 onCloseTarkForm={this.onCloseTarkForm}
                 onSubmit={this.onSubmit}
-                
+                tark={tarkEditing}
             ></TarkForm>
             : '';
         
@@ -153,7 +190,7 @@ class App extends Component {
             <div className="App">
                 <div className="container">
                     <h1 className="heading text-center">
-                        Word Management
+                        Quản Lý Công Việc
                     </h1>
                     <div className="row app-body">
                         <div className={tarkFormClassname}>
@@ -169,7 +206,7 @@ class App extends Component {
                             </button>
                             <button
                                 className="btn btn-primary ml-3"
-                                onClick = {this.onGenerageData}
+                                // onClick = {this.onGenerageData}
                             >
                                 <i className="fas fa-database mr-1"></i>
                                 Generage Data                                
@@ -181,6 +218,7 @@ class App extends Component {
                                 tarks={tarks}
                                 onUpdateStatus={this.onUpdateStatus}
                                 onDelete={this.onDelete}
+                                onUpdate={this.onUpdate}
                             ></TarkList>
                         </div>
                     </div>
