@@ -19,7 +19,8 @@ class App extends Component {
             filter: {
                 name: '',
                 status: -1
-            }
+            },
+            keyword:''
         }
         // this.onGenerageData = this.onGenerageData.bind(this);
         this.onToggleTarkForm = this.onToggleTarkForm.bind(this);
@@ -30,6 +31,7 @@ class App extends Component {
         this.onDelete = this.onDelete.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
         this.onFilter = this.onFilter.bind(this);
+        this.onSearch = this.onSearch.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -181,6 +183,13 @@ class App extends Component {
         })
     }
 
+    // Hàm search
+    onSearch(keyword) {
+        this.setState({
+            keyword: keyword
+        })
+    }
+
     render() {  
         // State
         const { tarks, isDisplayForm, tarkEditing, filter } = this.state;
@@ -208,6 +217,10 @@ class App extends Component {
         // name && status -> filterTark
         if (filter) {
             // Lọc tên
+            filterTark = tarks.filter((tark) => {
+                return tark.name.toLowerCase().indexOf(this.state.keyword.toLowerCase()) !== -1
+            })
+            
             if (filter.name) {
                 filterTark = tarks.filter((tark) => {
                     return tark.name.toLowerCase().indexOf(filter.name.toLowerCase()) !== -1
@@ -226,6 +239,9 @@ class App extends Component {
                     return tark.status === (filter.status === 1 ? true : false);
                 })            
             }
+            // Lọc theo keyword
+            
+            
         }
         return (            
             <div className="App">
@@ -253,7 +269,9 @@ class App extends Component {
                                 Generage Data                                
                             </button>
                             {/* Search and Sort */}                  
-                            <Control></Control>
+                            <Control
+                                onSearch={this.onSearch}
+                            ></Control>
                             {/* Tark List */}
                             <TarkList
                                 tarks={filterTark}
