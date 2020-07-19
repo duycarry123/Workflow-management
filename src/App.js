@@ -15,7 +15,11 @@ class App extends Component {
         this.state = {
             tarks: [],
             isDisplayForm: false,
-            tarkEditing: null
+            tarkEditing: null,
+            filter: {
+                name: '',
+                status: -1
+            }
         }
         // this.onGenerageData = this.onGenerageData.bind(this);
         this.onToggleTarkForm = this.onToggleTarkForm.bind(this);
@@ -25,6 +29,7 @@ class App extends Component {
         this.onUpdateStatus = this.onUpdateStatus.bind(this);
         this.onDelete = this.onDelete.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
+        this.onFilter = this.onFilter.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -164,9 +169,22 @@ class App extends Component {
         this.onShowTarkForm();
     }
 
+    // Hàm lọc dữ liệu trên table
+    onFilter(filterName, filterStatus) {
+        filterName = filterName.trim();
+        filterStatus = parseInt(filterStatus, 10);
+        this.setState({
+            filter: {
+                name: filterName,
+                status: filterStatus
+            }
+        })
+    }
+
     render() {  
         // State
-        const { tarks, isDisplayForm , tarkEditing} = this.state;
+        const { tarks, isDisplayForm, tarkEditing, filter } = this.state;
+        var filterTark = tarks;
         // TarkForm
         const elmTarkForm = isDisplayForm
             ? <TarkForm
@@ -186,6 +204,29 @@ class App extends Component {
             '': isDisplayForm === false
         })
 
+        // table filter
+        // name && status -> filterTark
+        if (filter) {
+            // Lọc tên
+            if (filter.name) {
+                filterTark = tarks.filter((tark) => {
+                    return tark.name.toLowerCase().indexOf(filter.name.toLowerCase()) !== -1
+                })
+            } 
+            // &&
+            // Và lọc theo status
+            if (filter.status === -1) {  
+                // Nếu status === -1 thì hiện tất cả
+                filterTark = filterTark.filter((tark) => {
+                    return tark;
+                })           
+                // Ngược lại hiện theo true false
+            } else {                
+                filterTark = filterTark.filter((tark) => {
+                    return tark.status === (filter.status === 1 ? true : false);
+                })            
+            }
+        }
         return (            
             <div className="App">
                 <div className="container">
@@ -215,10 +256,11 @@ class App extends Component {
                             <Control></Control>
                             {/* Tark List */}
                             <TarkList
-                                tarks={tarks}
+                                tarks={filterTark}
                                 onUpdateStatus={this.onUpdateStatus}
                                 onDelete={this.onDelete}
                                 onUpdate={this.onUpdate}
+                                onFilter={this.onFilter}
                             ></TarkList>
                         </div>
                     </div>
