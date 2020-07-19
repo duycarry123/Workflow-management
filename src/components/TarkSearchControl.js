@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class Search extends Component {
+class TarkSearchControl extends Component {
     
     constructor(props) {
         super(props);
@@ -51,4 +51,4 @@ class Search extends Component {
         );
     }
 }
-export default Search;
+export default TarkSearchControl;

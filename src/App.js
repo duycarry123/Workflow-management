@@ -3,7 +3,7 @@ import randomstring from 'randomstring'
 import classnames from "classnames"
 
 import TarkForm from './components/TarkForm'
-import Control from './components/Control'
+import TarkControl from './components/TarkControl'
 import TarkList from './components/TarkList'
 
 
@@ -20,7 +20,10 @@ class App extends Component {
                 name: '',
                 status: -1
             },
-            keyword:''
+            keyword: '',
+            sortByName: 'name',
+            sortByValue: 1
+            
         }
         // this.onGenerageData = this.onGenerageData.bind(this);
         this.onToggleTarkForm = this.onToggleTarkForm.bind(this);
@@ -32,6 +35,7 @@ class App extends Component {
         this.onUpdate = this.onUpdate.bind(this);
         this.onFilter = this.onFilter.bind(this);
         this.onSearch = this.onSearch.bind(this);
+        this.onSort = this.onSort.bind(this);
     }
 
     // Load dữ liệu từ localStogare về state bằng lifecycles componentDidMount()
@@ -190,9 +194,19 @@ class App extends Component {
         })
     }
 
+    // Hàm sort
+    onSort(data) {
+        this.setState({
+            sortByName: data.sortByName,
+            sortByValue:data.sortByValue
+        }, function () {
+            console.log(this.state)
+        })
+    }
+
     render() {  
         // State
-        const { tarks, isDisplayForm, tarkEditing, filter } = this.state;
+        const { tarks, isDisplayForm, tarkEditing, filter, sortByName, sortByValue } = this.state;
         var filterTark = tarks;
         // TarkForm
         const elmTarkForm = isDisplayForm
@@ -213,14 +227,41 @@ class App extends Component {
             '': isDisplayForm === false
         })
 
+
+        // Sap xep
+        if (sortByName === 'name') {     
+            // Sort theo name
+            filterTark.sort((tart1, tark2) => {
+                if (tart1.name > tark2.name) {
+                    return sortByValue
+                }
+                if (tart1.name < tark2.name) {
+                    return -sortByValue;
+                }
+                return 0;
+            })
+        } else {
+            filterTark.sort((tart1, tark2) => {
+                if (tart1.status > tark2.status) {
+                    return -sortByValue
+                }
+                if (tart1.status < tark2.status) {
+                    return sortByValue;
+                }
+                return 0;
+            })
+        }
+
+
         // table filter
         // name && status -> filterTark
         if (filter) {
+
             // Lọc tên
             filterTark = tarks.filter((tark) => {
                 return tark.name.toLowerCase().indexOf(this.state.keyword.toLowerCase()) !== -1
             })
-            
+
             if (filter.name) {
                 filterTark = tarks.filter((tark) => {
                     return tark.name.toLowerCase().indexOf(filter.name.toLowerCase()) !== -1
@@ -269,9 +310,10 @@ class App extends Component {
                                 Generage Data                                
                             </button>
                             {/* Search and Sort */}                  
-                            <Control
+                            <TarkControl
                                 onSearch={this.onSearch}
-                            ></Control>
+                                onSort={this.onSort}
+                            ></TarkControl>
                             {/* Tark List */}
                             <TarkList
                                 tarks={filterTark}

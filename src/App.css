@@ -67,7 +67,7 @@ ul li {
 }
 .dropdown-list{
   padding:0 10px;
-  width:200px;
+  width:230px;
 }
 .sort-i{
   margin-right:8px;
@@ -84,4 +84,11 @@ button:focus{
 .tark-status{
   cursor: default;
 }
-
+.sort-active::after{
+  content:'\2713';
+  display:inline-block;
+  font-size: 20px;
+  float:right;
+  margin-right: 5px;
+  margin-top: -4px;
+}
